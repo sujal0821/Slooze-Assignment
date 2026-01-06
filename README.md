@@ -1,46 +1,156 @@
-![Logo](./public/FFFFFF-1.png)
-# Slooze take home challenge-fullstack!!
+# 🍔 Slooze - Role-Based Food Ordering Platform
 
-## Question:
+![Slooze Logo](./frontend/public/FFFFFF-1.png)
 
-Design and implement a full-stack, role-based food ordering web application where users (Admins, Managers, and Members) can perform specific functions—such as viewing restaurants, placing or canceling orders, and managing payment methods—based on their assigned role.
+A full-stack, role-based food ordering web application built for the Slooze Fullstack Challenge.
 
-**Assume**: Mock restaurants & menu items onto your app
-
-**Extension**: Implement a relational access model that restricts users to operate only within their assigned country (India or America).
-
-### 🎯 Feature Breakdown & Role-Based Access
-| **Feature**                      | **Admin** | **Manager** | **Member** |
-|----------------------------------|----------|------------|------------|
-| View restaurants & menu items   | ✅       | ✅         | ✅         |
-| Create an order (add food items)| ✅       | ✅         | ✅         |
-| Checkout & pay                  | ✅       | ✅         | ❌         |
-| Cancel an order                 | ✅       | ✅         | ❌         |
-| Add / Modify payment methods    | ✅       | ❌         | ❌         |
-
-
-### Tech Stack:
-- **Backend**: NestJS · GraphQL · Prisma
-- **Frontend**: Next.js · TypeScript · Tailwind CSS · Apollo Client
-- **Auth**: Role-based access control (RBAC) · Bonus: Re-BAC
 ---
 
-## Reference:
+## ✨ Features
 
-Refer to the pdf attached in the repository for more details on the problem statement
+| Feature | Admin | Manager | Member |
+|---------|-------|---------|--------|
+| View restaurants & menu items | ✅ | ✅ | ✅ |
+| Create an order | ✅ | ✅ | ✅ |
+| Checkout & pay | ✅ | ✅ | ❌ |
+| Cancel an order | ✅ | ✅ | ❌ |
+| Add/Modify payment methods | ✅ | ❌ | ❌ |
+| **View all countries** | ✅ | ❌ | ❌ |
 
-## 📤 Submission
-- Upload your code to GitHub or share as a CodeSandbox/StackBlitz link
-- Include instructions to run the app locally (e.g., npm install && npm run dev)
-- (Optional) Deploy and share a live link using Vercel, Netlify, etc.
+## 🛠️ Tech Stack
 
-## Connect with Us:
+| Layer | Technology |
+|-------|------------|
+| **Backend** | NestJS, GraphQL, Prisma, SQLite |
+| **Frontend** | Next.js 16, React 19, TypeScript, Tailwind CSS 4 |
+| **Auth** | JWT-based RBAC with country restrictions |
+| **UI Components** | Lucide Icons, Sonner (Toast notifications) |
 
-Reach out to **[careers@slooze.xyz](mailto:careers@slooze.xyz)** to submit your solutions or if you may have any questions related to the challenege
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js 18+
+- npm or yarn
+
+### Installation
+
+```bash
+# Clone the repository
+git clone <repo-url>
+cd Slooze
+
+# Install backend dependencies
+cd backend
+npm install
+
+# Setup database
+npx prisma generate
+npx prisma db push
+npx prisma db seed
+
+# Start backend (runs on http://localhost:3001)
+npm run start:dev
+```
+
+```bash
+# In a new terminal - Install frontend dependencies
+cd frontend
+npm install
+
+# Start frontend (runs on http://localhost:3000)
+npm run dev
+```
+
+### Demo Credentials
+
+| User | Email | Role | Country |
+|------|-------|------|---------|
+| Nick Fury | nick.fury@slooze.com | Admin | Global |
+| Captain Marvel | captain.marvel@slooze.com | Manager | India |
+| Captain America | captain.america@slooze.com | Manager | USA |
+| Thanos | thanos@slooze.com | Member | India |
+| Thor | thor@slooze.com | Member | India |
+| Travis | travis@slooze.com | Member | USA |
+
+**Password for all users:** `password123`
+
+---
+
+## 📁 Project Structure
+
+```
+Slooze/
+├── backend/               # NestJS GraphQL API
+│   ├── src/
+│   │   ├── auth/         # JWT Auth, Guards, RBAC
+│   │   ├── restaurant/   # Restaurant & Menu CRUD
+│   │   ├── order/        # Order management
+│   │   └── prisma/       # Database service
+│   └── prisma/
+│       ├── schema.prisma # Database schema
+│       └── seed.ts       # Demo data seeding
+│
+└── frontend/              # Next.js Application
+    ├── src/
+    │   ├── app/          # Pages (login, dashboard)
+    │   ├── context/      # Auth & Cart providers
+    │   ├── lib/          # GraphQL queries/mutations
+    │   └── components/   # Shared components
+    └── public/           # Static assets
+```
+
+---
+
+## 🔐 Role-Based Access Control
+
+### Country Restrictions
+- **Admin**: Can view restaurants from **all countries** (India & USA)
+- **Manager/Member**: Restricted to restaurants in their assigned country
+
+### Permission Matrix
+- **Members** can browse and add to cart but cannot checkout
+- **Managers** can process orders and cancel them
+- **Admins** have full access including payment method management
+
+---
+
+## 🎨 UI Highlights
+
+- **Glassmorphism Design** - Modern, frosted-glass aesthetic
+- **Toast Notifications** - Elegant feedback using Sonner
+- **Responsive Layout** - Works on desktop and mobile
+- **Quick Login** - One-click demo user selection
+
+---
+
+## 📝 API Endpoints
+
+The GraphQL API is available at `http://localhost:3001/graphql`
+
+### Key Queries
+- `me` - Get current user
+- `restaurants` - Get restaurants (filtered by country/role)
+- `orders` - Get user's orders
+
+### Key Mutations
+- `login(email, password)` - Authenticate user
+- `placeOrder(items)` - Create a new order
+- `cancelOrder(orderId)` - Cancel an order
+
+---
+
+## 👨‍💻 Developer
+
+**Made with ❤️ by Sujal Singh**
+
+📧 Contact: [sujal0821@gmail.com](mailto:sujal0821@gmail.com)
+
+---
 
 ## © Copyright Notice
 
 **© Slooze. All Rights Reserved.**
 
-Please do not share or distribute this material outside the intended evaluation process.  
-For queries, contact us !!
+This project was created as part of the Slooze Fullstack Challenge evaluation process.

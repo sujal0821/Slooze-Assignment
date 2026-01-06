@@ -1,0 +1,114 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  id: String!
+  email: String!
+  name: String
+  role: Role!
+  country: Country
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  MEMBER
+}
+
+enum Country {
+  INDIA
+  USA
+}
+
+type AuthPayload {
+  accessToken: String!
+  user: User!
+}
+
+type MenuItem {
+  id: String!
+  name: String!
+  price: Float!
+}
+
+type Restaurant {
+  id: String!
+  name: String!
+  country: Country!
+  menuItems: [MenuItem!]
+}
+
+type OrderItem {
+  id: String!
+  menuItem: MenuItem!
+  quantity: Int!
+}
+
+type Order {
+  id: String!
+  status: String!
+  total: Float!
+  restaurant: Restaurant!
+  items: [OrderItem!]!
+  createdAt: DateTime!
+  paymentMethod: String
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Query {
+  me: User!
+  restaurants: [Restaurant!]!
+  restaurant(id: String!): Restaurant!
+  orders: [Order!]!
+}
+
+type Mutation {
+  register(input: RegisterInput!): AuthPayload!
+  login(loginInput: LoginInput!): AuthPayload!
+  createRestaurant(input: CreateRestaurantInput!): Restaurant!
+  createMenuItem(input: CreateMenuItemInput!): MenuItem!
+  placeOrder(input: CreateOrderInput!): Order!
+  payOrder(id: String!): Order!
+  cancelOrder(id: String!): Order!
+  updatePaymentMethod(id: String!): Order!
+}
+
+input RegisterInput {
+  email: String!
+  password: String!
+  name: String
+  role: Role! = MEMBER
+  country: Country! = INDIA
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+input CreateRestaurantInput {
+  name: String!
+  country: Country!
+}
+
+input CreateMenuItemInput {
+  restaurantId: String!
+  name: String!
+  price: Float!
+}
+
+input CreateOrderInput {
+  restaurantId: String!
+  paymentMethod: String!
+  items: [OrderItemInput!]!
+}
+
+input OrderItemInput {
+  menuItemId: String!
+  quantity: Int!
+}
