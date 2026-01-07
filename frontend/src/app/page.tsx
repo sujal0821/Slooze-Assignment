@@ -68,10 +68,24 @@ export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("restaurants");
   const router = useRouter();
 
-  const formatCurrency = (price: number) => {
+  const formatCurrency = (price: number, sourceCountry: string) => {
+    // 1. If user is in India
     if (user?.country === "INDIA") {
+      // If the restaurant is also Indian, the price is ALREADY in INR. Display as is.
+      if (sourceCountry === "INDIA") {
+        return `₹${price.toLocaleString('en-IN')}`;
+      }
+      // If the restaurant is NOT Indian (e.g. USA), convert USD to INR.
       return `₹${(price * 83).toLocaleString('en-IN')}`;
     }
+
+    // 2. If user is in USA (or elsewhere)
+    // If the restaurant is in INDIA, convert INR to USD.
+    if (sourceCountry === "INDIA") {
+      return `$${(price / 83).toFixed(2)}`;
+    }
+
+    // Otherwise (USA user viewing USA restaurant), display as USD.
     return `$${price.toFixed(2)}`;
   };
 
@@ -237,10 +251,10 @@ export default function Dashboard() {
                           <div key={item.id} className="group/item flex justify-between items-center p-3 rounded-xl hover:bg-slate-50 border border-transparent hover:border-slate-100 transition-all">
                             <div className="flex flex-col">
                               <span className="text-sm font-semibold text-slate-700">{item.name}</span>
-                              <span className="text-xs text-indigo-600 font-bold mt-0.5">{formatCurrency(item.price)}</span>
+                              <span className="text-xs text-indigo-600 font-bold mt-0.5">{formatCurrency(item.price, rest.country)}</span>
                             </div>
                             <button
-                              onClick={() => addItem({ menuItemId: item.id, name: item.name, price: item.price, restaurantId: rest.id })}
+                              onClick={() => addItem({ menuItemId: item.id, name: item.name, price: item.price, restaurantId: rest.id, country: rest.country })}
                               className="w-8 h-8 flex items-center justify-center bg-white border border-slate-200 text-slate-600 rounded-full hover:bg-indigo-600 hover:text-white hover:border-indigo-600 hover:scale-110 active:scale-95 transition-all shadow-sm"
                               title="Add to Cart"
                             >
@@ -294,11 +308,11 @@ export default function Dashboard() {
                             </div>
                             <div>
                               <p className="font-bold text-slate-800">{item.name}</p>
-                              <p className="text-xs text-slate-400 font-medium">{formatCurrency(item.price)} per unit</p>
+                              <p className="text-xs text-slate-400 font-medium">{formatCurrency(item.price, item.country)} per unit</p>
                             </div>
                           </div>
                           <div className="flex items-center gap-6">
-                            <span className="font-bold text-slate-700">{formatCurrency(item.price * item.quantity)}</span>
+                            <span className="font-bold text-slate-700">{formatCurrency(item.price * item.quantity, item.country)}</span>
                             <button
                               onClick={() => removeItem(item.menuItemId)}
                               className="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
@@ -313,15 +327,15 @@ export default function Dashboard() {
                     <div className="bg-slate-50 rounded-2xl p-6 space-y-3 border border-slate-100">
                       <div className="flex justify-between text-sm text-slate-500">
                         <span>Subtotal</span>
-                        <span className="font-medium">{formatCurrency(total)}</span>
+                        <span className="font-medium">{formatCurrency(total, items.length > 0 ? items[0].country : "USA")}</span>
                       </div>
                       <div className="flex justify-between text-sm text-slate-500">
                         <span>Taxes & Fees (5%)</span>
-                        <span className="font-medium">{formatCurrency(total * 0.05)}</span>
+                        <span className="font-medium">{formatCurrency(total * 0.05, items.length > 0 ? items[0].country : "USA")}</span>
                       </div>
                       <div className="flex justify-between text-xl font-bold text-slate-900 pt-4 border-t border-slate-200 mt-2">
                         <span>Grand Total</span>
-                        <span className="text-indigo-600">{formatCurrency(total * 1.05)}</span>
+                        <span className="text-indigo-600">{formatCurrency(total * 1.05, items.length > 0 ? items[0].country : "USA")}</span>
                       </div>
                     </div>
 
@@ -407,7 +421,7 @@ export default function Dashboard() {
                     <div className="flex items-center justify-between md:justify-end gap-6 w-full md:w-auto mt-4 md:mt-0 pt-4 md:pt-0 border-t md:border-t-0 border-slate-100">
                       <div className="text-right">
                         <p className="text-xs text-slate-400 font-medium uppercase tracking-wider mb-0.5">Total Amount</p>
-                        <p className="font-black text-xl text-slate-900">{formatCurrency(order.total)}</p>
+                        <p className="font-black text-xl text-slate-900">{formatCurrency(order.total, order.restaurant.name === "Spicy Tandoor" || order.restaurant.name === "Curry House" ? "INDIA" : "USA")}</p>
                       </div>
 
                       {order.status === "PENDING" && user.role !== Role.MEMBER && (
