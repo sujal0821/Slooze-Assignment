@@ -32,14 +32,10 @@ echo "🔄 Running Prisma migrations..."
 npx prisma migrate deploy
 
 # 5. Seed the database (Nick Fury, Captain Marvel, etc.)
-if [ "$IS_NEW_DB" = true ] || [ ! -f "$SEED_MARKER" ]; then
-    echo "🌱 Seeding initial roles and regional data..."
-    npx tsx prisma/seed.ts
-    touch "$SEED_MARKER"
-    echo "✅ Database seeded successfully!"
-else
-    echo "⏭️  Database already seeded, skipping..."
-fi
+# 5. Seed the database (Always run to ensure data sync)
+echo "🌱 Seeding/Updating roles and regional data..."
+npx tsx prisma/seed.ts
+echo "✅ Database seeded successfully!"
 
 # 6. Start the production server
 # Note: NestJS builds typically output to dist/main.js

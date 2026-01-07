@@ -34,8 +34,8 @@ async function main() {
             name: 'Spicy Tandoor',
             country: 'INDIA',
             menuItems: [
-                { name: 'Butter Chicken', price: 800 },
-                { name: 'Naan', price: 70 },
+                { name: 'Butter Chicken', price: 600 },
+                { name: 'Naan', price: 100 },
                 { name: 'Paneer Tikka', price: 300 },
             ],
         },
@@ -44,9 +44,9 @@ async function main() {
             name: 'Curry House',
             country: 'INDIA',
             menuItems: [
-                { name: 'Chicken Biryani', price: 500 },
-                { name: 'Samosa', price: 200 },
-                { name: 'Lassi', price: 150 },
+                { name: 'Chicken Biryani', price: 400 },
+                { name: 'Samosa', price: 150 },
+                { name: 'Lassi', price: 120 },
             ],
         },
         {
